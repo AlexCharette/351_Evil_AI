@@ -42,7 +42,7 @@ function checkLocationNamesForSpaces(apArray) {
 
 function calculateLocationPoints(opLocation) {
   var sLocationName = opLocation.sId || opLocation.sName;
-  var sTagName = $('.' + sLocationName + ' *').prop("tagName");
+  var sTagName = $('.' + sLocationName).children().prop("tagName");
   if (!sTagName) {
     console.log("ERR_COULD_NOT_FIND_TAG_NAME");
     return;
