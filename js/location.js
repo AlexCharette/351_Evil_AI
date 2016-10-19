@@ -14,7 +14,7 @@ var oLocation = function(spName, spLanguage,
 };
 
 var aoPossibleLocations = [Reykjavik = new oLocation("Reykjavik", "Icelandic", "#02529C", "#DC1E35", "#FFFFFF"), London = new oLocation("London", "English", "#CC0000", "#003399", "#FFFFFF"),
-                           Brazilia = new oLocation("Brazilia", "Portuguese", "#00A859", "#FFCC29", "#3E4095"), HongKong = new oLocation("Hong Kong", "Cantonese", "#FF0000", "#FFFFFF"),
+                           Brasilia = new oLocation("Brasilia", "Portuguese", "#00A859", "#FFCC29", "#3E4095"), HongKong = new oLocation("Hong Kong", "Cantonese", "#FF0000", "#FFFFFF"),
                            Frankfurt = new oLocation("Frankfurt", "German", "#000000", "#FF0000", "#FFCC00"), Johannesburg = new oLocation("Johannesburg", "Afrikaans", "#007C59", "#E23D28", "#FCB514"),
                            BuenosAires = new oLocation("Buenos Aires", "Spanish", "#75AADB", "#FCBF49", "#FFFFFF"), Marseille = new oLocation("Marseille", "French", "#0055A4", "#FFFFFF", "#EF4135"),
                            NewYork = new oLocation("New York", "English", "#B22234", "#FFFFFF", "#3C3B6E"), Stockholm = new oLocation("Stockholm", "Swedish", "#FFCE00", "#00559B")];
