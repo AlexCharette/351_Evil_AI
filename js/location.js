@@ -29,6 +29,7 @@ function readyLocations() {
   }
   for (oCurrentLocation of aoSelectedLocations)
     calculateLocationPoints(oCurrentLocation);
+  logPointTotals();
   bLocationsReady = true;
 }
 
@@ -40,37 +41,45 @@ function checkLocationNamesForSpaces(apArray) {
   }
 }
 
+function logPointTotals() {
+  for (var i = 0; i < aoSelectedLocations.length; i++) {
+    console.log("Points for " + aoSelectedLocations[i].sName + ": " + aoSelectedLocations[i].iPoints);
+  }
+}
+
 function calculateLocationPoints(opLocation) {
   var sLocationName = opLocation.sId || opLocation.sName;
-  var sTagName = $('.' + sLocationName).children().prop("tagName");
-  if (!sTagName) {
-    console.log("ERR_COULD_NOT_FIND_TAG_NAME");
+  var aoTags = $('.' + sLocationName).children();
+  if (!aoTags) {
+    console.log("ERR_COULD_NOT_FIND_TAGS");
     return;
   }
-  sTagName = sTagName.toLowerCase();
-  switch(sTagName) {
-    case "li":
-      opLocation.iPoints += Web.moElementValues.get("li");
-      console.log("LI_FOUND_IN: " + sLocationName);
-    break;
-    case "h3":
-      opLocation.iPoints += Web.moElementValues.get("h3");
-      console.log("H3_FOUND_IN: " + sLocationName);
-    break;
-    case "p":
-      opLocation.iPoints += Web.moElementValues.get("p");
-      console.log("P_FOUND_IN: " + sLocationName);
-    break;
-    case "img":
-      opLocation.iPoints += Web.moElementValues.get("img");
-      console.log("IMG_FOUND_IN: " + sLocationName);
-    break;
-    case "a":
-      opLocation.iPoints += Web.moElementValues.get("a");
-      console.log("A_FOUND_IN: " + sLocationName);
-    break;
-    default:
-    console.log("ERR_INVALID_TAGNAME_IN: " + sLocationName);
+  for (var i = 0; i < aoTags.length; i++) {
+    var sTagName = aoTags[i].tagName.toLowerCase();
+    switch(sTagName) {
+      case "li":
+        opLocation.iPoints += Web.moElementValues.get("li");
+        console.log("LI_FOUND_IN: " + sLocationName);
+      break;
+      case "h3":
+        opLocation.iPoints += Web.moElementValues.get("h3");
+        console.log("H3_FOUND_IN: " + sLocationName);
+      break;
+      case "p":
+        opLocation.iPoints += Web.moElementValues.get("p");
+        console.log("P_FOUND_IN: " + sLocationName);
+      break;
+      case "img":
+        opLocation.iPoints += Web.moElementValues.get("img");
+        console.log("IMG_FOUND_IN: " + sLocationName);
+      break;
+      case "a":
+        opLocation.iPoints += Web.moElementValues.get("a");
+        console.log("A_FOUND_IN: " + sLocationName);
+      break;
+      default:
+      console.log("ERR_INVALID_TAGNAME_IN: " + sLocationName);
+    }
   }
 }
 
