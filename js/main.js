@@ -13,4 +13,5 @@ $(document).ready(function() {
   Web.setElementValues();
   readyLocations();
 
+
 });

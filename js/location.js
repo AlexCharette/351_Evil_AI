@@ -1,6 +1,7 @@
+/* Location objects, collections locations and methods for manipulating them and enhancing them */
+// USE TUBULAR AS ULTIMATE POWER
 const iNUM_LOCATIONS = 7;
 var bLocationsReady = false;
-
 var oLocation = function(spName, spLanguage,
                          spMainColor, spSecondColor, spThirdColor = undefined) {
   this.sName = spName;
@@ -8,7 +9,7 @@ var oLocation = function(spName, spLanguage,
   this.sMainColor = spMainColor;
   this.sSecondColor = spSecondColor;
   this.sThirdColor = spThirdColor;
-  this.sId = ((!Statics.bHasSpaces(this.sName)) ? "" : Statics.sReplaceCharacters(this.sName, ' ', '-'));
+  this.sId = (Statics.bHasSpaces(this.sName) ? Statics.sReplaceCharacters(this.sName, ' ', '-') : "");
   this.iPoints = 0;
   console.log("In " + this.sName + ", they speak " + this.sLanguage);
 };
@@ -19,6 +20,24 @@ var aoPossibleLocations = [Reykjavik = new oLocation("Reykjavik", "Icelandic", "
                            BuenosAires = new oLocation("Buenos Aires", "Spanish", "#75AADB", "#FCBF49", "#FFFFFF"), Marseille = new oLocation("Marseille", "French", "#0055A4", "#FFFFFF", "#EF4135"),
                            NewYork = new oLocation("New York", "English", "#B22234", "#FFFFFF", "#3C3B6E"), Stockholm = new oLocation("Stockholm", "Swedish", "#FFCE00", "#00559B")];
 var aoSelectedLocations = [];
+var msLocationSummaries = new Map();
+
+var Abilities = Abilities || {};
+
+Abilities = {
+  usePopup: function() {
+    // some code
+  },
+
+  takeTerritory: function() {
+    // some code
+  }
+}
+
+function addLocationSummaries(aoLocations) {
+  for (oCurrentLocation of aoLocations)
+    oCurrentLocation.sSummary = msLocationSummaries(oCurrentLocation.sName);
+}
 
 function readyLocations() {
   if (!bLocationsReady) {
@@ -26,25 +45,13 @@ function readyLocations() {
     aoSelectedLocations = Statics.aShuffleArray(aoSelectedLocations); // TODO possibly not showing all locations
     Statics.trimArray(aoSelectedLocations, iNUM_LOCATIONS);
     Events.assignHomeTerritories();
+    setLocationSummaries();
+    Events.assignPageTerritories();
   }
   for (oCurrentLocation of aoSelectedLocations)
     calculateLocationPoints(oCurrentLocation);
   logPointTotals();
   bLocationsReady = true;
-}
-
-function checkLocationNamesForSpaces(apArray) {
-  for (var i = 0; i < apArray.length; i++) {
-    if (Statics.bHasSpaces(apArray[i].sName)) {
-      apArray[i].sId = Statics.sReplaceCharacters(apArray[i].sName, ' ', '-');
-    }
-  }
-}
-
-function logPointTotals() {
-  for (var i = 0; i < aoSelectedLocations.length; i++) {
-    console.log("Points for " + aoSelectedLocations[i].sName + ": " + aoSelectedLocations[i].iPoints);
-  }
 }
 
 function calculateLocationPoints(opLocation) {
@@ -83,14 +90,25 @@ function calculateLocationPoints(opLocation) {
   }
 }
 
-var Abilities = Abilities || {};
 
-Abilities = {
-  usePopup: function() {
-    // some code
-  },
 
-  takeTerritory: function() {
-    // some code
+function setLocationSummaries() {
+  for (oCurrentLocation of aoSelectedLocations) {
+    var sLocationName = oCurrentLocation.sId || oCurrentLocation.sName;
+    $.ajax({url: "./assets/summaries/" + sLocationName + "-Summary.txt",
+      success: function(result){
+        msLocationSummaries.set(oCurrentLocation.sName, result);
+      },
+      error: function() {
+        console.log("Summary not found for: " + oCurrentLocation.sName);
+        msLocationSummaries.set("Summary not found for: " + oCurrentLocation.sName);
+      }
+    });
+  }
+}
+
+function logPointTotals() {
+  for (var i = 0; i < aoSelectedLocations.length; i++) {
+    console.log("Points for " + aoSelectedLocations[i].sName + ": " + aoSelectedLocations[i].iPoints);
   }
 }

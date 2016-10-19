@@ -42,5 +42,9 @@ Statics = {
       }
     }
     return spText.substr(0, index) + cpDesired + spText.substr(index + 1);
+  },
+
+  sGetMergedText(spText1, spText2) {
+    return spText1 + spText2;
   }
 }

@@ -1,17 +1,16 @@
 
+
+// http://stackoverflow.com/questions/1589234/whats-the-cleanest-way-to-write-a-multiline-string-in-javascript
+
 var Events = Events || {};
 
 Events = {
   bHomeTerritoriesAssigned: false,
+  bPageTerritoriesAssigned: false,
 
   Conquest: function(opAttacker, opDefender){
     oAttacker = opAttacker;
     oDefender = opDefender;
-  },
-
-  Diplomacy: function(opInitiator, opResponder){
-    oInitiator = opInitiator;
-    oResponder = opResponder;
   },
 
   assignHomeTerritories: function() {
@@ -28,9 +27,8 @@ Events = {
     },
 
    createHomeTerritory: function(ipRowNum, opLocation) {
-     var sLocationName = opLocation.sId || opLocation.sName;
-     var homeTerritory = '<div class="' + sLocationName + ' home-territory"><img><h3>' + opLocation.sName + '</h3></div>';
-     $('#row-' + ipRowNum).append(homeTerritory);
+     var sHomeTerritory = this.sGetHomeTerritoryTag(opLocation);
+     $('#row-' + ipRowNum).append(sHomeTerritory);
      this.styleHomeTerritory(opLocation);
    },
 
@@ -52,5 +50,48 @@ Events = {
      $('.' + sLocationName).css("color", sTextColor);
      document.styleSheets[0].insertRule('#home-gallery .' + sLocationName + ' h3:after { display: block; content: ""; margin: 0 auto; height: 5px; width: 0px; -webkit-transition: width 0.25s ease; transition: width 0.25s ease; }', 0);
      document.styleSheets[0].insertRule('#home-gallery .' + sLocationName + ':hover h3:after { width: 100%; background-color: ' + sTrimColor + '; }', 1);
+   },
+
+   sGetHomeTerritoryTag: function(opLocation) {
+     var sLocationName = opLocation.sId || opLocation.sName;
+     return '<div class="' + sLocationName + ' home-territory"><img src="" alt =""><h3>' + opLocation.sName + '</h3></div>';
+   },
+
+   assignPageTerritories: function() {
+     if (!this.bPageTerritoriesAssigned) {
+       for (oCurrentLocation of aoSelectedLocations) {
+         this.createPageTerritory(oCurrentLocation);
+       }
+     }
+     this.bPageTerritoriesAssigned = true;
+   },
+
+   createPageTerritory: function(opLocation) {
+     var sLocationName = opLocation.sId || opLocation.sName;
+     var oLocationPage = Web.makeDocument(sLocationName, Statics.sGetMergedText(this.sGetTerritoryPageBase(opLocation), this.sGetTerritoryPageContent(opLocation)));
+     sessionStorage.setItem(sLocationName + "-page", oLocationPage);
+   },
+
+   sGetTerritoryPageContent: function(opLocation) {
+     var sHeroImage = '<img src="" alt="">';
+     var sMainTitle = '<h1>Come to ' + opLocation.sName + '</h1>';
+     var sSummary = '<main>' + msLocationSummaries.get(opLocation.sName) + '</main>';
+   },
+
+   sGetTerritoryPageBase: function(opLocation) {
+     var sLocationName = opLocation.sId || opLocation.sName;
+     return [""
+              ,'<!DOCTYPE html> \n <html lang="en"> \n <head>'
+              ,'<meta http-equiv="content-type" content="text/html; charset=utf-8">'
+              ,'<title>' + opLocation.sName + '</title>'
+              ,'<link rel="stylesheet" type="text/css" href="css/style.css"/>'
+              ,'<script language="javascript" content="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>'
+              ,'<script language="javascript" content="text/javascript" src="js/statics.js"></script>'
+              ,'<script language="javascript" content="text/javascript" src="js/web.js"></script>'
+              ,'<script language="javascript" content="text/javascript" src="js/location.js"></script>'
+              ,'<script language="javascript" content="text/javascript" src="js/events.js"></script>'
+              ,'<script language="javascript" content="text/javascript" src="js/main.js"></script>'
+              ,'</head> \n <body id="' + sLocationName + '-home"> \n </body> \n </html>'
+          ].join("\n");
    }
 }
