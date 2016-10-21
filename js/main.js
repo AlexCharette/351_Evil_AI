@@ -12,6 +12,7 @@ $(document).ready(function() {
 
   Web.setElementValues();
   readyLocations();
+  Interaction.listenForClicks();
 
 
 });

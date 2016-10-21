@@ -33,11 +33,11 @@ Web = {
   },
 
   makeDocument: function(spName, spContents = undefined) {
-    var oDocument = document.implementation.createHTMLDocument(spName);
+    var dDocument = document.implementation.createHTMLDocument(spName);
     try {
-      oDocument.write(spContents);
+      dDocument.write(spContents);
     } catch(e) {
-      console.log("ERR_COULD_NOT_WRITE_CONTENTS_TO_" + oDocument);
+      console.log("ERR_COULD_NOT_WRITE_CONTENTS_TO_" + dDocument);
     }
   }
 }

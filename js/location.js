@@ -90,8 +90,6 @@ function calculateLocationPoints(opLocation) {
   }
 }
 
-
-
 function setLocationSummaries() {
   for (oCurrentLocation of aoSelectedLocations) {
     var sLocationName = oCurrentLocation.sId || oCurrentLocation.sName;
