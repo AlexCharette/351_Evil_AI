@@ -22,9 +22,9 @@ Web = {
   bStorageAvailable: function(pType) {
   	try {
   		var oStorage = window[pType],
-  			x = '__storage_test__';
-  		storage.setItem(x, x);
-  		storage.removeItem(x);
+  			sTest = '__storage_test__';
+  		storage.setItem(sTest, sTest);
+  		storage.removeItem(sTest);
   		return true;
   	}
   	catch(e) {
@@ -32,12 +32,7 @@ Web = {
   	}
   },
 
-  makeDocument: function(spName, spContents = undefined) {
-    var dDocument = document.implementation.createHTMLDocument(spName);
-    try {
-      dDocument.write(spContents);
-    } catch(e) {
-      console.log("ERR_COULD_NOT_WRITE_CONTENTS_TO_" + dDocument);
-    }
+  oGetNewDocument: function(spName) {
+    return oDocument = new Blob([spName], {type: "text/html; charset=utf-8"});
   }
 }
