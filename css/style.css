@@ -1,9 +1,6 @@
 @font-face {
   font-family: 'Mist';
   src: url("../assets/fonts/Mist-Regular.ttf") format("truetype"); }
-#page-frame {
-  width: 100%;
-  height: 100%; }
 #home-gallery {
   width: 90%;
   height: 60%;
@@ -18,6 +15,9 @@
       height: 100%;
       margin: 0 inherit;
       font-size: 150%; }
+    #home-gallery .home-territory a {
+      color: inherit;
+      text-decoration: none; }
 
 .row {
   width: 100%;
