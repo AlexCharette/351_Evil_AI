@@ -3,13 +3,29 @@
 var Interaction = Interaction || {};
 
 Interaction = {
-  listenForClicks: function() {
-    $('.home-territory').click(function() {
-      this.navigateTo(this.attr('id'));
+
+  addListeners: function() {
+    this.addClickListeners();
+    this.addHoverListeners();
+  },
+
+  addClickListeners: function() {
+    $('.home-territory, .popup').click(function() {
+      Web.switchPageTo(Web.oGetPageOwnerById(this));
     });
   },
 
-  navigateTo: function(spLocationName) {
-    sessionStorage.get(spLocationName + "-page");
+  addHoverListeners: function() {
+    console.log("hovers activated");
+    $('#link-box').mouseover(function() {
+      var iRandIndex;
+      var oPageOwner = Web.oGetPageOwnerByClass(this);
+      if (iRandIndex == aoSelectedLocations.indexOf(oPageOwner)) {
+        iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
+        console.log("ERR_OWNER_AND_ATTACKER_ARE_SAME");
+      } else {
+        Events.activatePopupFor(aoSelectedLocations[iRandIndex]);
+      }
+    });
   }
 }

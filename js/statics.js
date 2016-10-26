@@ -34,16 +34,6 @@ Statics = {
     return bFoundSpace;
   },
 
-  sReplaceCharacters: function(spText, cpToReplace, cpDesired) {
-    var index;
-    for (var i = 0; i < spText.length; i++) {
-      if (spText.charAt(i) == cpToReplace) {
-        index = i; // won't work more than once
-      }
-    }
-    return spText.substr(0, index) + cpDesired + spText.substr(index + 1);
-  },
-
   sGetMergedText(spText1, spText2) {
     return spText1 + spText2;
   }
