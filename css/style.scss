@@ -22,10 +22,24 @@ $font-stack: 'Mist', sans-serif;
       margin: 0 inherit;
       font-size: 150%;
     }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+  }
+}
+
+#page-header {
+  width: 100%;
+  height: 350px;
+  text-align: center;
+  overflow: hidden;
+}
+
+#page-content {
+  width: 80%;
+  height: 60%;
+
+  #summary-box {
+    width: 50%;
+    height: 50%;
+    margin: 0 auto;
   }
 }
 
@@ -37,4 +51,15 @@ $font-stack: 'Mist', sans-serif;
 
 body {
   font-family: $font-stack;
+  text-align: center;
+}
+
+main {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
