@@ -2,7 +2,6 @@
 // USE TUBULAR AS ULTIMATE POWER
 const iNUM_LOCATIONS = 7;
 var bLocationsReady = false;
-var bAssetsLoaded = false;
 var oLocation = function(spName, spLanguage,
                          spMainColor, spSecondColor, spThirdColor = "", sAirportCode) {
   this.sName = spName;
@@ -13,6 +12,7 @@ var oLocation = function(spName, spLanguage,
   this.sId = (Statics.bHasSpaces(this.sName) ? this.sName.replace(' ', '') : this.sName);
   this.iPoints = 0;
   this.sAirportCode = sAirportCode;
+  this.bPopupActivated = false;
 
   this.asGetLocationColorRoles = function() {
     var sBackgroundColor = this.sMainColor;
@@ -44,24 +44,20 @@ function readyLocations() {
   aoSelectedLocations = Statics.aShuffleArray(aoSelectedLocations); // TODO possibly not showing all locations
   Statics.trimArray(aoSelectedLocations, iNUM_LOCATIONS);
   Events.assignHomeTerritories();
-  setLocationSummaries();
   bLocationsReady = true;
 }
 
-function setLocationSummaries() {
-  if (bAssetsLoaded) { return; }
+function loadSummaries() {
   for (oCurrentLocation of aoSelectedLocations) {
     $.ajax({url: "./assets/summaries/" + oCurrentLocation.sId + "-Summary.txt",
       success: function(result) {
         oCurrentLocation.sSummary = result;
       },
       error: function() {
-        console.log("Summary not found for: " + oCurrentLocation.sId);
         oCurrentLocation.sSummary = "Summary not found for: " + oCurrentLocation.sId;
       }
     });
   }
-  bAssetsLoaded = true;
 }
 
 function logPointTotals() {

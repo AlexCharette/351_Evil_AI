@@ -43,20 +43,17 @@ Web = {
     $('.row').remove();
     if (!opLocation.sSummary) { return; }
     $('#summary-box p').text(opLocation.sSummary);
-    console.log(opLocation.sSummary);
   },
 
   buildPopup: function(opLocation) {
     var iRandIndex = Math.round(Math.random(0, Abilities.asCounterPhrases.length - 1));
     var oTargetLocation = this.oGetPageOwnerById('body');
-    console.log(oTargetLocation);
     var sHeadingPhrase;
     sHeadingPhrase = Abilities.asCounterPhrases[iRandIndex].replace("xyz", oTargetLocation.sName);
-    sHeadingPhrase = sHeadingPhrase.replace("abc", opLocation.sName);
+    sHeadingPhrase = sHeadingPhrase.replace("abc", "<span>" + opLocation.sName + "</span>");
     $('body').append('<div id="' + opLocation.sId + '" class="popup"></div>');
     $('#' + opLocation.sId + '.popup').append('<h2>' + sHeadingPhrase + '</h2>');
     $('.popup').append('<h4>Head over now!</h4>');
-    console.log("Popup built");
   },
 
   styleHomeTerritory: function(opLocation) {
@@ -78,7 +75,7 @@ Web = {
                                        ,'#' + opLocation.sId + 'h1 {'
                                        ,'display: inline-block; width: auto;'
                                        ,'background-color: ' + opLocation.asGetLocationColorRoles()[0] + '}'
-                                       ].join(""), 0);
+                                       ].join(""), 2);
     $('#' + opLocation.sId + ' p').css("color", "#000");
   },
 
@@ -90,17 +87,16 @@ Web = {
                                        ,'position: relative; width: 40%; height: 30%;'
                                        ,'margin: auto;'
                                        ,'text-align: center;'
-                                       ,'border: 5px solid ' + opLocation.asGetLocationColorRoles()[2] + '; opacity: 0.8;'
+                                       ,'border: 10px solid ' + opLocation.asGetLocationColorRoles()[2] + '; opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
-                                       ].join(""), 0);
+                                       ].join(""), 3);
     document.styleSheets[0].insertRule('.popup:hover { opacity: 1; }', 1);
     document.styleSheets[0].insertRule([""
-                                       ,'.popup #' + opLocation.sId + 'h4:after {'
+                                       ,'.popup #' + opLocation.sId + 'span:after {'
                                        ,'display: none; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
-                                       ].join(""), 2);
-    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover h4:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[1] + '; }', 3);
-    console.log("Popup styled");
+                                       ].join(""), 4);
+    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[1] + '; }', 5);
   },
 
   sGetFlightURL: function(opLocation) {
@@ -111,7 +107,6 @@ Web = {
 
   switchPageTo: function(pPage) {
     if (pPage != "home") {
-      if (!bAssetsLoaded) { return; }
       this.buildPageTerritory(pPage);
       this.stylePageTerritory(pPage);
     } else {
@@ -128,7 +123,6 @@ Web = {
 
   oGetPageOwnerByClass: function(pElement) {
     var sOwnerName = $(pElement).attr('class');
-    console.log(sOwnerName);
     function bIsCorrectLocation(oCurrentLocation) { return oCurrentLocation.sId == sOwnerName; }
     return aoSelectedLocations.find(bIsCorrectLocation);
   },

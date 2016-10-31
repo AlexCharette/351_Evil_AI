@@ -28,8 +28,9 @@ Events = {
     },
 
     activatePopupFor: function(opLocation) {
-      if ($('body').attr('class') == "page-territory") {
+      if ($('body').attr('class') == "page-territory" && opLocation.bPopupActivated == false) {
         Abilities.usePopup(opLocation);
+        Abilities.aiActivePopups++;
       }
     }
 }

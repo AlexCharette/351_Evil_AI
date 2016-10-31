@@ -12,5 +12,6 @@ $(document).ready(function() {
   Web.buildHomePage();
   Web.setElementValues();
   readyLocations();
+  loadSummaries();
   Interaction.addListeners();
 });
