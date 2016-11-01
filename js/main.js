@@ -9,6 +9,7 @@
 // http://stackoverflow.com/questions/1431094/how-do-i-replace-a-character-at-a-particular-index-in-javascript
 
 $(document).ready(function() {
+
   Web.buildHomePage();
   Web.setElementValues();
   readyLocations();

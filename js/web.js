@@ -18,8 +18,8 @@ Web = {
 
   buildHomePage: function() {
     $('body').attr('id', "home");
-    $('header').attr('id', "home-header");
-    $('main').attr('id', "home-gallery");
+    $('body').append('<header id="home-header"></header>');
+    $('body').append('<main id="home-gallery"></main>');
     $('main').append('<div id="row-0" class="row"></div>');
     $('main').append('<div id="row-1" class="row"></div>');
     $('main').append('<div id="row-2" class="row"></div>');
@@ -27,22 +27,25 @@ Web = {
 
   buildHomeTerritory: function(ipRowNum, opLocation) {
     $('#row-' + ipRowNum).append('<div id="' + opLocation.sId + '" class="home-territory"></div>');
-    $('#' + opLocation.sId + '.home-territory').append('<img src="" alt ="">');
+    $('#' + opLocation.sId + '.home-territory').append('<img src="./assets/img/thumbnails/' + opLocation.sId + '.jpg">');
     $('#' + opLocation.sId + '.home-territory').append('<h3>' + opLocation.sName + '</h3>');
   },
 
   buildPageTerritory: function(opLocation) {
     $('body').attr('id', opLocation.sId);
     $('body').attr('class', "page-territory");
-    $('header').attr('id', "page-header");
-    $('header').prepend('<img src="./assets/img/full/' + opLocation.sId + '.jpg">');
-    $('h1').text('Come to ' + opLocation.sName + '!');
-    $('main').attr('id', "page-content");
+    $('body').append('<header id="page-header"></header>');
+    $('header').append('<h2 id="return">Home</h2>');
+    $('header').append('<img src="./assets/img/full/' + opLocation.sId + '.jpg">');
+    $('body').append('<h1>Come to ' + opLocation.sName + '!</h1>');
+    $('body').append('<main id="page-content"></main>');
     $('main').append('<div id="summary-box"><p></p></div>');
     $('main').append('<div id="link-box" class="' + opLocation.sId + '"><a href="' + this.sGetFlightURL(opLocation) + '"><h4>What are you waiting for?</h4></a></div>');
-    $('.row').remove();
-    if (!opLocation.sSummary) { return; }
-    $('#summary-box p').text(opLocation.sSummary);
+    if (opLocation.sSummary) {
+      $('#summary-box p').text(opLocation.sSummary);
+    } else {
+      $('#summary-box p').text("For whatever reason, we didn't set a summary. Tough shit.");
+    }
   },
 
   buildPopup: function(opLocation) {
@@ -53,7 +56,7 @@ Web = {
     sHeadingPhrase = sHeadingPhrase.replace("abc", "<span>" + opLocation.sName + "</span>");
     $('body').append('<div id="' + opLocation.sId + '" class="popup"></div>');
     $('#' + opLocation.sId + '.popup').append('<h2>' + sHeadingPhrase + '</h2>');
-    $('.popup').append('<h4>Head over now!</h4>');
+    $('#' + opLocation.sId + '.popup').append('<h4>Head over now!</h4>');
   },
 
   styleHomeTerritory: function(opLocation) {
@@ -80,12 +83,12 @@ Web = {
   },
 
   stylePopup: function(opLocation) {
-    $('.popup').css("background-color", opLocation.asGetLocationColorRoles()[0]);
-    $('#' + opLocation.sId).css("color", opLocation.asGetLocationColorRoles()[1]);
+    $('#' + opLocation.sId + '.popup').css("background-color", opLocation.asGetLocationColorRoles()[0]);
+    $('#' + opLocation.sId + '.popup').css("color", opLocation.asGetLocationColorRoles()[1]);
     document.styleSheets[0].insertRule([""
                                        ,'.popup {'
-                                       ,'position: relative; width: 40%; height: 30%;'
-                                       ,'margin: auto;'
+                                       ,'position: absolute; width: 40%; height: 30%;'
+                                       ,'margin-top: 40%; margin-right: 40%; margin-left: 40%;'
                                        ,'text-align: center;'
                                        ,'border: 10px solid ' + opLocation.asGetLocationColorRoles()[2] + '; opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
@@ -99,6 +102,14 @@ Web = {
     document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[1] + '; }', 5);
   },
 
+  destroyPage: function() {
+    $('body').empty();
+  },
+
+  destroyPopups: function() {
+    $('.popup').remove();
+  },
+
   sGetFlightURL: function(opLocation) {
     var sFrom = "YUL", // TODO replace to make personalized
         sTo = opLocation.sAirportCode;
@@ -106,13 +117,20 @@ Web = {
   },
 
   switchPageTo: function(pPage) {
+    this.destroyPage();
+    Events.resetPopups();
     if (pPage != "home") {
       this.buildPageTerritory(pPage);
       this.stylePageTerritory(pPage);
     } else {
-      this.buildHomePage();
-      Events.assignHomeTerritories();
+      this.returnToHome();
     }
+  },
+
+  returnToHome: function() {
+    this.buildHomePage();
+    Events.assignHomeTerritories();
+    Interaction.addListeners();
   },
 
   oGetPageOwnerById: function(pElement) {

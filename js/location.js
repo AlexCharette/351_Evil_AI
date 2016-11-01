@@ -1,5 +1,8 @@
 /* Location objects, collections locations and methods for manipulating them and enhancing them */
 // USE TUBULAR AS ULTIMATE POWER
+
+//http://stackoverflow.com/questions/2687679/jquery-ajax-inside-a-loop-problem
+
 const iNUM_LOCATIONS = 7;
 var bLocationsReady = false;
 var oLocation = function(spName, spLanguage,
@@ -12,7 +15,6 @@ var oLocation = function(spName, spLanguage,
   this.sId = (Statics.bHasSpaces(this.sName) ? this.sName.replace(' ', '') : this.sName);
   this.iPoints = 0;
   this.sAirportCode = sAirportCode;
-  this.bPopupActivated = false;
 
   this.asGetLocationColorRoles = function() {
     var sBackgroundColor = this.sMainColor;
@@ -49,15 +51,19 @@ function readyLocations() {
 
 function loadSummaries() {
   for (oCurrentLocation of aoSelectedLocations) {
-    $.ajax({url: "./assets/summaries/" + oCurrentLocation.sId + "-Summary.txt",
-      success: function(result) {
-        oCurrentLocation.sSummary = result;
-      },
-      error: function() {
-        oCurrentLocation.sSummary = "Summary not found for: " + oCurrentLocation.sId;
-      }
-    });
+    getSummary(oCurrentLocation);
   }
+}
+
+function getSummary(opLocation) {
+  $.ajax({url: "./assets/summaries/" + opLocation.sId + "-Summary.txt",
+    success: function(result) {
+      opLocation.sSummary = result;
+    },
+    error: function() {
+      opLocation.sSummary = "Summary not found for: " + opLocation.sId;
+    }
+  });
 }
 
 function logPointTotals() {

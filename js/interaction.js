@@ -12,20 +12,23 @@ Interaction = {
     var oContext = this;
     $('.home-territory, .popup').click(function() {
       Web.switchPageTo(Web.oGetPageOwnerById(this));
+      $('#return').click(function() {
+        Web.switchPageTo("home");
+      });
       oContext.addHoverListeners();
     });
   },
 
   addHoverListeners: function() {
-    console.log("hovers activated");
     $('#link-box').mouseover(function() {
-      console.log("HOVERING");
       var iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
       var oPageOwner = Web.oGetPageOwnerByClass(this);
-      if (iRandIndex == aoSelectedLocations.indexOf(oPageOwner)) {
-        iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
-      } else {
-        Events.activatePopupFor(aoSelectedLocations[iRandIndex]);
+      if (Events.bPopupExists == false) {
+        if (iRandIndex == aoSelectedLocations.indexOf(oPageOwner)) {
+          iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
+        } else {
+          Events.activatePopupFor(aoSelectedLocations[iRandIndex]);
+        }
       }
     });
   }

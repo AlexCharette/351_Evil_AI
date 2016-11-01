@@ -6,31 +6,27 @@
 var Events = Events || {};
 
 Events = {
-  bHomeTerritoriesAssigned: false,
-
-  Conquest: function(opAttacker, opDefender){
-    oAttacker = opAttacker;
-    oDefender = opDefender;
-  },
+  bPopupExists: false,
 
   assignHomeTerritories: function() {
-      if (!this.bHomeTerritoriesAssigned) {
-        var iRowToFill, iLimitPerRow;
-        iRowToFill = 0;
-        iLimitPerRow = 4;
-        for (var i = 0; i < aoSelectedLocations.length; i++) {
-          Web.buildHomeTerritory(iRowToFill, aoSelectedLocations[i]);
-          Web.styleHomeTerritory(aoSelectedLocations[i]);
-          if (i == iLimitPerRow - 1) iRowToFill++;
-        }
+      var iRowToFill = 0,
+          iLimitPerRow = 4;
+      for (var i = 0; i < aoSelectedLocations.length; i++) {
+        Web.buildHomeTerritory(iRowToFill, aoSelectedLocations[i]);
+        Web.styleHomeTerritory(aoSelectedLocations[i]);
+        if (i == iLimitPerRow - 1) iRowToFill++;
       }
-      this.bHomeTerritoriesAssigned = true;
     },
 
     activatePopupFor: function(opLocation) {
-      if ($('body').attr('class') == "page-territory" && opLocation.bPopupActivated == false) {
+      if ($('body').attr('class') == "page-territory") {
         Abilities.usePopup(opLocation);
-        Abilities.aiActivePopups++;
+        this.bPopupExists = true;
       }
+    },
+
+    resetPopups: function() {
+      Web.destroyPopups();
+      this.bPopupExists = false;
     }
 }
