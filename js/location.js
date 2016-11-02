@@ -13,7 +13,6 @@ var oLocation = function(spName, spLanguage,
   this.sSecondColor = spSecondColor;
   this.sThirdColor = spThirdColor;
   this.sId = (Statics.bHasSpaces(this.sName) ? this.sName.replace(' ', '') : this.sName);
-  this.iPoints = 0;
   this.sAirportCode = sAirportCode;
 
   this.asGetLocationColorRoles = function() {
@@ -26,11 +25,10 @@ var oLocation = function(spName, spLanguage,
         return this.sThirdColor || this.sSecondColor;
       }
     }
-    var sTrimColor = ((this.sThirdColor && (this.sThirdColor != "#FFFFFF")) ? this.sThirdColor : this.sSecondColor);
+    var sTrimColor = (this.sThirdColor && (this.sThirdColor != "#FFFFFF")) ? this.sThirdColor : this.sSecondColor;
     var asColorArray = [sBackgroundColor, sTextColor, sTrimColor];
     return asColorArray;
   }
-  console.log("In " + this.sName + ", they speak " + this.sLanguage);
 };
 
 var aoPossibleLocations = [Reykjavik = new oLocation("Reykjavik", "Icelandic", "#02529C", "#DC1E35", "#FFFFFF", "KEF"), London = new oLocation("London", "English", "#CC0000", "#003399", "#FFFFFF", "LHR"),
@@ -64,10 +62,4 @@ function getSummary(opLocation) {
       opLocation.sSummary = "Summary not found for: " + opLocation.sId;
     }
   });
-}
-
-function logPointTotals() {
-  for (oCurrentLocation of aoSelectedLocations) {
-    console.log("Points for " + oCurrentLocation.sName + ": " + oCurrentLocation.iPoints);
-  }
 }

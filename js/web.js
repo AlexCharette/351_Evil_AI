@@ -3,22 +3,12 @@
 var Web = Web || {};
 
 Web = {
-  moElementValues: new Map(),
-
-  setElementValues: function() {
-    var iLiValue = 2, iH1Value = 4, iH3Value = 3, iPValue = 1,
-        iImgValue = 5, iAValue = 3;
-    this.moElementValues.set("li", iLiValue);
-    this.moElementValues.set("h1", iH1Value);
-    this.moElementValues.set("h3", iH3Value);
-    this.moElementValues.set("p", iPValue);
-    this.moElementValues.set("img", iImgValue);
-    this.moElementValues.set("a", iAValue);
-  },
+  oLastVisitedPage: undefined,
 
   buildHomePage: function() {
     $('body').attr('id', "home");
     $('body').append('<header id="home-header"></header>');
+    $('header').append('<h1>Go anywhere you like!</h1>');
     $('body').append('<main id="home-gallery"></main>');
     $('main').append('<div id="row-0" class="row"></div>');
     $('main').append('<div id="row-1" class="row"></div>');
@@ -36,7 +26,7 @@ Web = {
     $('body').attr('class', "page-territory");
     $('body').append('<header id="page-header"></header>');
     $('header').append('<h2 id="return">Home</h2>');
-    $('header').append('<img src="./assets/img/full/' + opLocation.sId + '.jpg">');
+    $('header').append('<div id="img-box"><img src="./assets/img/full/' + opLocation.sId + '.jpg"></div>');
     $('body').append('<h1>Come to ' + opLocation.sName + '!</h1>');
     $('body').append('<main id="page-content"></main>');
     $('main').append('<div id="summary-box"><p></p></div>');
@@ -59,6 +49,12 @@ Web = {
     $('#' + opLocation.sId + '.popup').append('<h4>Head over now!</h4>');
   },
 
+  buildCertaintyBox: function(opLocation) {
+    var sHeadingPhrase = "Are you sure you want to leave? <br> You can get your ticket right now!";
+    $('body').append('<div id="' + opLocation.sId + '" class="certainty-box"></div>');
+    $('#' + opLocation.sId + '.certainty-box').append('<h3>' + sHeadingPhrase + '</h3>');
+  },
+
   styleHomeTerritory: function(opLocation) {
     $('#' + opLocation.sId + ' h3').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId).css("color", opLocation.asGetLocationColorRoles()[1]);
@@ -66,40 +62,83 @@ Web = {
                                        ,'#home-gallery #' + opLocation.sId + ' h3:after {'
                                        ,'display: block; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
-                                       ].join(""), 0);
+                                     ].join(""), 0);
     document.styleSheets[0].insertRule([""
                                        ,'#home-gallery #' + opLocation.sId + ':hover h3:after {'
                                        ,'width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[2] + '; }'
-                                       ].join(""), 1);
+                                     ].join(""), 1);
   },
 
   stylePageTerritory: function(opLocation) {
     document.styleSheets[0].insertRule([""
+                                       ,'#return { '
+                                       ,'width: 10%;'
+                                       ,'margin-left: auto; margin-right: auto;}'
+                                     ].join(""), 2);
+    document.styleSheets[0].insertRule([""
                                        ,'#' + opLocation.sId + 'h1 {'
                                        ,'display: inline-block; width: auto;'
-                                       ,'background-color: ' + opLocation.asGetLocationColorRoles()[0] + '}'
-                                       ].join(""), 2);
+                                       ,'background-color: ' + opLocation.asGetLocationColorRoles()[0] + '; }'
+                                     ].join(""), 3);
+    document.styleSheets[0].insertRule([""
+                                       ,'#img-box {'
+                                       ,'display: inline-block;'
+                                       ,'position: relative; width: 70%;'
+                                       ,'margin-top: 2%; margin-left: auto; margin-right: auto;'
+                                       ,'overflow: hidden; }'
+                                     ].join(""), 4);
+    document.styleSheets[0].insertRule([""
+                                       ,'#img-box img {'
+                                       ,'position: relative;'
+                                       ,'margin-left: auto; margin-right: auto;'
+                                       ,'top: -40%; }'
+                                     ].join(""), 5);
+   document.styleSheets[0].insertRule([""
+                                      ,'#link-box h4 {'
+                                      ,'position: relative; width: 10%; height: 5%;'
+                                      ,'margin-left: auto; margin-right: auto; }'
+                                    ].join(""), 6);
     $('#' + opLocation.sId + ' p').css("color", "#000");
   },
 
   stylePopup: function(opLocation) {
+    var iWidth = 600,
+        iHeight = iWidth / 3;
     $('#' + opLocation.sId + '.popup').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId + '.popup').css("color", opLocation.asGetLocationColorRoles()[1]);
+    $('#' + opLocation.sId + '.popup').css("border", " 10px solid " + opLocation.asGetLocationColorRoles()[2]);
     document.styleSheets[0].insertRule([""
                                        ,'.popup {'
-                                       ,'position: absolute; width: 40%; height: 30%;'
-                                       ,'margin-top: 40%; margin-right: 40%; margin-left: 40%;'
+                                       ,'position: fixed; width: ' +  iWidth + 'px; height: ' + iHeight + 'px;'
+                                       ,'top: 50%; left: 50%; margin-top: -' + iHeight / 2 + 'px; margin-left: -' + iWidth / 2 + 'px;'
                                        ,'text-align: center;'
-                                       ,'border: 10px solid ' + opLocation.asGetLocationColorRoles()[2] + '; opacity: 0.8;'
+                                       ,'opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
-                                       ].join(""), 3);
+                                     ].join(""), 7);
     document.styleSheets[0].insertRule('.popup:hover { opacity: 1; }', 1);
     document.styleSheets[0].insertRule([""
                                        ,'.popup #' + opLocation.sId + 'span:after {'
-                                       ,'display: none; content: ""; margin: 0 auto; height: 5px; width: 0px;'
+                                       ,'display: block; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
-                                       ].join(""), 4);
-    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[1] + '; }', 5);
+                                     ].join(""), 8);
+    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[2] + '; }', 9);
+  },
+
+  styleCertaintyBox: function(opLocation) {
+    var iWidth = 350,
+        iHeight = iWidth / 3;
+    $('#' + opLocation.sId + '.certainty-box').css("background-color", opLocation.asGetLocationColorRoles()[0]);
+    $('#' + opLocation.sId + '.certainty-box').css("color", opLocation.asGetLocationColorRoles()[1]);
+    $('#' + opLocation.sId + '.certainty-box').css("border", " 10px solid " + opLocation.asGetLocationColorRoles()[2]);
+    document.styleSheets[0].insertRule([""
+                                       ,'.certainty-box {'
+                                       ,'position: fixed; width: ' +  iWidth + 'px; height: ' + iHeight + 'px;'
+                                       ,'top: 15%; left: 50%; margin-top: -' + iHeight / 2 + 'px; margin-left: -' + iWidth / 2 + 'px;'
+                                       ,'text-align: center;'
+                                       ,'opacity: 0.8;'
+                                       ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
+                                     ].join(""), 10);
+    document.styleSheets[0].insertRule('.certainty-box:hover { opacity: 1; }', 11);
   },
 
   destroyPage: function() {
@@ -108,6 +147,10 @@ Web = {
 
   destroyPopups: function() {
     $('.popup').remove();
+  },
+
+  destroyCertaintyBoxes: function() {
+    $('.certainty-box').remove();
   },
 
   sGetFlightURL: function(opLocation) {
@@ -119,18 +162,12 @@ Web = {
   switchPageTo: function(pPage) {
     this.destroyPage();
     Events.resetPopups();
+    Events.resetCertaintyBoxes();
     if (pPage != "home") {
-      this.buildPageTerritory(pPage);
-      this.stylePageTerritory(pPage);
+      Events.setupPage(pPage);
     } else {
-      this.returnToHome();
+      Events.setupHome();
     }
-  },
-
-  returnToHome: function() {
-    this.buildHomePage();
-    Events.assignHomeTerritories();
-    Interaction.addListeners();
   },
 
   oGetPageOwnerById: function(pElement) {
@@ -143,44 +180,5 @@ Web = {
     var sOwnerName = $(pElement).attr('class');
     function bIsCorrectLocation(oCurrentLocation) { return oCurrentLocation.sId == sOwnerName; }
     return aoSelectedLocations.find(bIsCorrectLocation);
-  },
-
-  calculateLocationPoints: function(opLocation) {
-    var aoTags = $('#' +  opLocation.sId).children();
-    if (!aoTags) {
-      console.log("ERR_COULD_NOT_FIND_TAGS");
-      return;
-    }
-    for (var i = 0; i < aoTags.length; i++) {
-      var sTagName = aoTags[i].tagName.toLowerCase();
-      switch(sTagName) {
-        case "li":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("LI_FOUND_IN: " +  opLocation.sId);
-        break;
-        case "h1":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("H1_FOUND_IN: " +  opLocation.sId);
-        break;
-        case "h3":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("H3_FOUND_IN: " +  opLocation.sId);
-        break;
-        case "p":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("P_FOUND_IN: " +  opLocation.sId);
-        break;
-        case "img":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("IMG_FOUND_IN: " +  opLocation.sId);
-        break;
-        case "a":
-          opLocation.iPoints += this.moElementValues.get(sTagName);
-          console.log("A_FOUND_IN: " +  opLocation.sId);
-        break;
-        default:
-          console.log("ERR_INVALID_TAGNAME_IN: " +  opLocation.sId);
-      }
-    }
   }
 }

@@ -7,6 +7,19 @@ var Events = Events || {};
 
 Events = {
   bPopupExists: false,
+  bCertaintyBoxExists: false,
+
+  setupPage: function(pPage) {
+    Web.buildPageTerritory(pPage);
+    Web.stylePageTerritory(pPage);
+    Interaction.addPageListeners();
+  },
+
+  setupHome: function() {
+    Web.buildHomePage();
+    this.assignHomeTerritories();
+    Interaction.addHomeListeners();
+  },
 
   assignHomeTerritories: function() {
       var iRowToFill = 0,
@@ -25,8 +38,20 @@ Events = {
       }
     },
 
+    activateCertaintyBox: function(opLocation) {
+      if ($('body').attr('class') == "page-territory") {
+        Abilities.useCertaintyBox(opLocation);
+        this.bCertaintyBoxExists = true;
+      }
+    },
+
     resetPopups: function() {
       Web.destroyPopups();
       this.bPopupExists = false;
+    },
+
+    resetCertaintyBoxes: function() {
+      Web.destroyCertaintyBoxes();
+      this.bCertaintyBoxExists = false;
     }
 }

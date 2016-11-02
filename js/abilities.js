@@ -12,19 +12,31 @@ Abilities = {
     });
   },
 
+  useCertaintyBox: function(opLocation) {
+    Web.buildCertaintyBox(opLocation);
+    Web.styleCertaintyBox(opLocation);
+  },
+
   takeTerritory: function(spTaken, spNew) {
     if (spNew.length > spTaken.length) {
       var iDifference = spNew.length - spTaken.length;
+      var sBuffered = spTaken;
       for (var i = 0; i < iDifference.length; i++) {
-        spTaken += " ";
+           sBuffered.concat(" ");
       }
     }
+    var sOld = sBuffered || spTaken;
+    console.log("sOld = " + sOld);
     for (var i = spNew.length; i > 0; i--) {
-      setInterval(this.swapChars, 250);
+      var cCurrentOld = sOld[i],
+          cCurrentNew = spNew[i];
+      //console.log("Old Char = " + cCurrentOld " , New Char = " + cCurrentNew);
+      setInterval(function() {
+        if(typeof sOld !== 'string') {
+          throw new Error(typeof sOld + ' parameter not supported!');
+        }
+        sOld.replace(cCurrentOld, cCurrentNew);
+      }, 250);
     }
-  },
-
-  swapChars: function(spText, cpReplace, cpNew) {
-    spText.replace(cpReplace, cpNew);
   }
 }
