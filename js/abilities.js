@@ -26,15 +26,13 @@ Abilities = {
       }
     }
     var sOld = sBuffered || spTaken;
-    console.log("sOld = " + sOld);
+    if (sOld) console.log("OKAY WE GOT SOME OLD TEXT");
     for (var i = spNew.length; i > 0; i--) {
+      console.log("I'm in the loop");
       var cCurrentOld = sOld[i],
           cCurrentNew = spNew[i];
-      //console.log("Old Char = " + cCurrentOld " , New Char = " + cCurrentNew);
+      console.log("Old Char = " + cCurrentOld + " , New Char = " + cCurrentNew);
       setInterval(function() {
-        if(typeof sOld !== 'string') {
-          throw new Error(typeof sOld + ' parameter not supported!');
-        }
         sOld.replace(cCurrentOld, cCurrentNew);
       }, 250);
     }

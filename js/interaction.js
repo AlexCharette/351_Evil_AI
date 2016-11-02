@@ -9,15 +9,13 @@ Interaction = {
       Web.switchPageTo(Web.oGetPageOwnerById(this));
     });
     if (Web.oLastVisitedPage) {
-      console.log("page visited");
       $('.home-territory').mouseover(function() {
-        console.log("hovering");
         var oOwningTerritory = Web.oGetPageOwnerById(this);
         var fRandomVal = Math.random(0, 1),
             fThreshold = 0.6;
-        if (fRandomVal > fThreshold) {
-          console.log("random val reached");
-          Abilities.takeTerritory($('#' + oOwningTerritory.sId + ' h3').text(), Web.oLastVisitedPage.sName);
+        var sAttackedTerritoryName = $('#' + oOwningTerritory.sId + ' h3').text();
+        if (fRandomVal < fThreshold) {
+          Abilities.takeTerritory(sAttackedTerritoryName, Web.oLastVisitedPage.sName);
         }
       });
     }
@@ -29,12 +27,13 @@ Interaction = {
       Web.switchPageTo("home");
     });
     $('#return').mouseover(function() {
-      Events.activateCertaintyBox(Web.oGetPageOwnerById('body'));
+      if (!Events.bCertaintyBoxExists)
+        Events.activateCertaintyBox(Web.oGetPageOwnerById('body'));
     });
     $('#link-box').mouseover(function() {
       var iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
       var oPageOwner = Web.oGetPageOwnerByClass(this);
-      if (Events.bPopupExists == false) {
+      if (!Events.bPopupExists) {
         if (iRandIndex == aoSelectedLocations.indexOf(oPageOwner)) {
           iRandIndex = Math.round(Math.random(0, aoSelectedLocations.length - 1));
         } else {
