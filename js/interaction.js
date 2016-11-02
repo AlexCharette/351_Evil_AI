@@ -13,9 +13,9 @@ Interaction = {
         var oOwningTerritory = Web.oGetPageOwnerById(this);
         var fRandomVal = Math.random(0, 1),
             fThreshold = 0.6;
-        var sAttackedTerritoryName = $('#' + oOwningTerritory.sId + ' h3').text();
+        var sAttackedTerritory = $('#' + oOwningTerritory.sId + ' h3');
         if (fRandomVal < fThreshold) {
-          Abilities.takeTerritory(sAttackedTerritoryName, Web.oLastVisitedPage.sName);
+          Abilities.takeTerritory(sAttackedTerritory, Web.oLastVisitedPage.sName);
         }
       });
     }

@@ -18,23 +18,31 @@ Abilities = {
   },
 
   takeTerritory: function(spTaken, spNew) {
-    if (spNew.length > spTaken.length) {
-      var iDifference = spNew.length - spTaken.length;
-      var sBuffered = spTaken;
-      for (var i = 0; i < iDifference.length; i++) {
+    var spTakenText = spTaken.text();
+    var iDifference, sBuffered;
+    if (spNew.length > spTakenText.length) {
+      iDifference = spNew.length - spTakenText.length;
+      sBuffered = spTakenText;
+      for (var i = 0; i < iDifference; i++) {
+           sBuffered.concat(" ");
+      }
+    } else if (spNew.length < spTakenText.length) {
+      iDifference = spTakenText.length - spTakenText.length;
+      sBuffered = spNew;
+      for (var i = 0; i < iDifference; i++) {
            sBuffered.concat(" ");
       }
     }
-    var sOld = sBuffered || spTaken;
-    if (sOld) console.log("OKAY WE GOT SOME OLD TEXT");
-    for (var i = spNew.length; i > 0; i--) {
-      console.log("I'm in the loop");
-      var cCurrentOld = sOld[i],
+    var sChangingText = sBuffered || spTakenText;
+    for (var i = spNew.length; i >= 0; i--) {
+      var cCurrentOld = sChangingText[i],
           cCurrentNew = spNew[i];
       console.log("Old Char = " + cCurrentOld + " , New Char = " + cCurrentNew);
       setInterval(function() {
-        sOld.replace(cCurrentOld, cCurrentNew);
+        sChangingText.replace(cCurrentOld, cCurrentNew);
+        $(spTaken).text(sChangingText);
       }, 250);
+      console.log("Replaced text: " + sChangingText);
     }
   }
 }
