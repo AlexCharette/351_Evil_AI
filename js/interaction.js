@@ -14,7 +14,7 @@ Interaction = {
         var fRandomVal = Math.random(0, 1),
             fThreshold = 0.6;
         var sAttackedTerritory = $('#' + oOwningTerritory.sId + ' h3');
-        if (fRandomVal < fThreshold) {
+        if (fRandomVal > fThreshold) {
           Abilities.takeTerritory(sAttackedTerritory, Web.oLastVisitedPage.sName);
         }
       });

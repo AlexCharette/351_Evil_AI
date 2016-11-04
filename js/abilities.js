@@ -41,8 +41,8 @@ Abilities = {
       setInterval(function() {
         sChangingText.replace(cCurrentOld, cCurrentNew);
         $(spTaken).text(sChangingText);
-      }, 250);
-      console.log("Replaced text: " + sChangingText);
+        console.log("Replaced text: " + sChangingText);
+      }, 250);  
     }
   }
 }
