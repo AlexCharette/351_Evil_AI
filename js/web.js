@@ -1,15 +1,18 @@
-
+/* Handles most web related functionality. Mostly involves building and destroying page structures
+   as well as adding CSS rules to style dynamically created elements using JS variables.
+*/
 
 var Web = Web || {};
 
 Web = {
   oLastVisitedPage: undefined,
+  iStyleSheetRuleIndex: 0,
 
   buildHomePage: function() {
     $('body').attr('id', "home");
-    $('body').append('<header id="home-header"></header>');
+    $('#wrapper').append('<header id="home-header"></header>');
     $('header').append('<h1>Go anywhere you like!</h1>');
-    $('body').append('<main id="home-gallery"></main>');
+    $('#wrapper').append('<main id="home-gallery"></main>');
     $('main').append('<div id="row-0" class="row"></div>');
     $('main').append('<div id="row-1" class="row"></div>');
     $('main').append('<div id="row-2" class="row"></div>');
@@ -24,86 +27,100 @@ Web = {
   buildPageTerritory: function(opLocation) {
     $('body').attr('id', opLocation.sId);
     $('body').attr('class', "page-territory");
-    $('body').append('<header id="page-header"></header>');
+    $('#wrapper').append('<header id="page-header"></header>');
     $('header').append('<h2 id="return">Home</h2>');
     $('header').append('<div id="img-box"><img src="./assets/img/full/' + opLocation.sId + '.jpg"></div>');
-    $('body').append('<h1>Come to ' + opLocation.sName + '!</h1>');
-    $('body').append('<main id="page-content"></main>');
+    $('#wrapper').append('<h1>Come to ' + opLocation.sName + '!</h1>');
+    $('#wrapper').append('<main id="page-content"></main>');
     $('main').append('<div id="summary-box"><p></p></div>');
     $('main').append('<div id="link-box" class="' + opLocation.sId + '"><a href="' + this.sGetFlightURL(opLocation) + '"><h4>What are you waiting for?</h4></a></div>');
     if (opLocation.sSummary) {
       $('#summary-box p').text(opLocation.sSummary);
     } else {
-      $('#summary-box p').text("For whatever reason, we didn't set a summary. Tough shit.");
+      $('#summary-box p').text("No summary found.");
     }
   },
 
   buildPopup: function(opLocation) {
     var iRandIndex = Math.round(Math.random(0, Abilities.asCounterPhrases.length - 1));
     var oTargetLocation = this.oGetPageOwnerById('body');
+    // The heading phrase is used in popups to adress the user, but draws on multiple
+    // possible phrases for greater variety
     var sHeadingPhrase;
+    // Placeholder words are replaced by the necessary names
     sHeadingPhrase = Abilities.asCounterPhrases[iRandIndex].replace("xyz", oTargetLocation.sName);
     sHeadingPhrase = sHeadingPhrase.replace("abc", "<span>" + opLocation.sName + "</span>");
-    $('body').append('<div id="' + opLocation.sId + '" class="popup"></div>');
+    $('#wrapper').append('<div id="' + opLocation.sId + '" class="popup"></div>');
     $('#' + opLocation.sId + '.popup').append('<h2>' + sHeadingPhrase + '</h2>');
     $('#' + opLocation.sId + '.popup').append('<h4>Head over now!</h4>');
   },
 
   buildCertaintyBox: function(opLocation) {
     var sHeadingPhrase = "Are you sure you want to leave? <br> You can get your ticket right now!";
-    $('body').append('<div id="' + opLocation.sId + '" class="certainty-box"></div>');
+    $('#wrapper').append('<div id="' + opLocation.sId + '" class="certainty-box"></div>');
     $('#' + opLocation.sId + '.certainty-box').append('<h3>' + sHeadingPhrase + '</h3>');
   },
 
   styleHomeTerritory: function(opLocation) {
+    // For more specific qualities (such as the colours of a location), inserting a rule is not dynamic enough
+    // so it is better to use the jQuery CSS modification method
     $('#' + opLocation.sId + ' h3').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId).css("color", opLocation.asGetLocationColorRoles()[1]);
     document.styleSheets[0].insertRule([""
                                        ,'#home-gallery #' + opLocation.sId + ' h3:after {'
                                        ,'display: block; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
-                                     ].join(""), 0);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'#home-gallery #' + opLocation.sId + ':hover h3:after {'
                                        ,'width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[2] + '; }'
-                                     ].join(""), 1);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
   },
 
   stylePageTerritory: function(opLocation) {
+    $('#summary-box').css("border", " 15px solid " + opLocation.asGetLocationColorRoles()[1]);
+    console.log("border added");
+    $('#' + opLocation.sId + ' p').css("color", "#000");
     document.styleSheets[0].insertRule([""
                                        ,'#return { '
                                        ,'width: 10%;'
                                        ,'margin-left: auto; margin-right: auto;}'
-                                     ].join(""), 2);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'#' + opLocation.sId + 'h1 {'
                                        ,'display: inline-block; width: auto;'
                                        ,'background-color: ' + opLocation.asGetLocationColorRoles()[0] + '; }'
-                                     ].join(""), 3);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'#img-box {'
                                        ,'display: inline-block;'
                                        ,'position: relative; width: 70%;'
                                        ,'margin-top: 2%; margin-left: auto; margin-right: auto;'
                                        ,'overflow: hidden; }'
-                                     ].join(""), 4);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'#img-box img {'
                                        ,'position: relative;'
                                        ,'margin-left: auto; margin-right: auto;'
                                        ,'top: -40%; }'
-                                     ].join(""), 5);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+   this.iStyleSheetRuleIndex++;
    document.styleSheets[0].insertRule([""
                                       ,'#link-box h4 {'
                                       ,'position: relative; width: 10%; height: 5%;'
                                       ,'margin-left: auto; margin-right: auto; }'
-                                    ].join(""), 6);
-    $('#' + opLocation.sId + ' p').css("color", "#000");
+                                    ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
   },
 
   stylePopup: function(opLocation) {
     var iWidth = 600,
-        iHeight = iWidth / 3;
+        iHeight = iWidth / 4;
     $('#' + opLocation.sId + '.popup').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId + '.popup').css("color", opLocation.asGetLocationColorRoles()[1]);
     $('#' + opLocation.sId + '.popup').css("border", " 10px solid " + opLocation.asGetLocationColorRoles()[2]);
@@ -114,14 +131,20 @@ Web = {
                                        ,'text-align: center;'
                                        ,'opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
-                                     ].join(""), 7);
-    document.styleSheets[0].insertRule('.popup:hover { opacity: 1; }', 1);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    // Everytime a new rule is entered, the index of the rule is bumped, just to be safe
+    this.iStyleSheetRuleIndex++;
+    document.styleSheets[0].insertRule('.popup:hover { opacity: 1; }', this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'.popup #' + opLocation.sId + 'span:after {'
                                        ,'display: block; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
-                                     ].join(""), 8);
-    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[2] + '; }', 9);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
+    document.styleSheets[0].insertRule('.popup #' + opLocation.sId + ':hover span:after { width: 100%; background-color: ' + opLocation.asGetLocationColorRoles()[2] + '; }'
+                                       , this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
   },
 
   styleCertaintyBox: function(opLocation) {
@@ -137,12 +160,14 @@ Web = {
                                        ,'text-align: center;'
                                        ,'opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
-                                     ].join(""), 10);
-    document.styleSheets[0].insertRule('.certainty-box:hover { opacity: 1; }', 11);
+                                     ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
+    document.styleSheets[0].insertRule('.certainty-box:hover { opacity: 1; }', this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
   },
 
   destroyPage: function() {
-    $('body').empty();
+    $('#wrapper').empty();
   },
 
   destroyPopups: function() {
@@ -153,16 +178,24 @@ Web = {
     $('.certainty-box').remove();
   },
 
+  // Ensures that there are no remnants from the previous page structure
+  // upon loading a new one
+  resetPage: function() {
+    this.destroyPage();
+    Events.resetPopups();
+    Events.resetCertaintyBoxes();
+  },
+
+  // Returns a URL to get a list of flights to the given destination
   sGetFlightURL: function(opLocation) {
     var sFrom = "YUL", // TODO replace to make personalized
         sTo = opLocation.sAirportCode;
     return "https://www.google.ca/flights/?f=0#search;f=" + sFrom + ";t=" + sTo + ";";
   },
 
+  // Changes the page structure between the home page and a location's page
   switchPageTo: function(pPage) {
-    this.destroyPage();
-    Events.resetPopups();
-    Events.resetCertaintyBoxes();
+    this.resetPage();
     if (pPage != "home") {
       Events.setupPage(pPage);
     } else {
@@ -170,14 +203,18 @@ Web = {
     }
   },
 
+  // Returns the owner of the page based on the ID of a given element
   oGetPageOwnerById: function(pElement) {
     var sOwnerName = $(pElement).attr('id');
+    // Iterate through the list of locations to find one with the right ID
     function bIsCorrectLocation(oCurrentLocation) { return oCurrentLocation.sId == sOwnerName; }
     return aoSelectedLocations.find(bIsCorrectLocation);
   },
 
+  // Returns the owner of the page based on the class of a given element
   oGetPageOwnerByClass: function(pElement) {
     var sOwnerName = $(pElement).attr('class');
+    // Iterate through the list of locations to find one with the right ID
     function bIsCorrectLocation(oCurrentLocation) { return oCurrentLocation.sId == sOwnerName; }
     return aoSelectedLocations.find(bIsCorrectLocation);
   }

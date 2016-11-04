@@ -9,4 +9,5 @@ $(document).ready(function() {
   readyLocations();
   Events.setupHome();
   loadSummaries();
+  console.log("HI PLEASE HEAR ME now");
 });

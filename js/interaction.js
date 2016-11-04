@@ -13,7 +13,7 @@ Interaction = {
         var oOwningTerritory = Web.oGetPageOwnerById(this);
         var fRandomVal = Math.random(0, 1),
             fThreshold = 0.6;
-        var sAttackedTerritory = $('#' + oOwningTerritory.sId + ' h3');
+        var sAttackedTerritory = oOwningTerritory.sId;
         if (fRandomVal > fThreshold) {
           Abilities.takeTerritory(sAttackedTerritory, Web.oLastVisitedPage.sName);
         }
