@@ -7,6 +7,7 @@ var Events = Events || {};
 
 Events = {
   bPopupExists: false,
+  bMasterPopupExists: false,
   bCertaintyBoxExists: false,
 
   setupPage: function(pPage) {
@@ -38,6 +39,11 @@ Events = {
       }
     },
 
+    activateMasterPopupFor: function(opLocation) {
+      Abilities.useMasterPopup(opLocation);
+      this.bMasterPopupExists = true;
+    },
+
     activateCertaintyBox: function(opLocation) {
       if ($('body').attr('class') == "page-territory") {
         Abilities.useCertaintyBox(opLocation);
@@ -48,6 +54,7 @@ Events = {
     resetPopups: function() {
       Web.destroyPopups();
       this.bPopupExists = false;
+      this.bMasterPopupExists = false;
     },
 
     resetCertaintyBoxes: function() {

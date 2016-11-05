@@ -11,7 +11,7 @@ Web = {
   buildHomePage: function() {
     $('body').attr('id', "home");
     $('#wrapper').append('<header id="home-header"></header>');
-    $('header').append('<h1>Go anywhere you like!</h1>');
+    $('header').append('<h1>You can go anywhere you like!</h1>');
     $('#wrapper').append('<main id="home-gallery"></main>');
     $('main').append('<div id="row-0" class="row"></div>');
     $('main').append('<div id="row-1" class="row"></div>');
@@ -43,16 +43,41 @@ Web = {
 
   buildPopup: function(opLocation) {
     var iRandIndex = Math.round(Math.random(0, Abilities.asCounterPhrases.length - 1));
-    var oTargetLocation = this.oGetPageOwnerById('body');
-    // The heading phrase is used in popups to adress the user, but draws on multiple
-    // possible phrases for greater variety
-    var sHeadingPhrase;
-    // Placeholder words are replaced by the necessary names
-    sHeadingPhrase = Abilities.asCounterPhrases[iRandIndex].replace("xyz", oTargetLocation.sName);
-    sHeadingPhrase = sHeadingPhrase.replace("abc", "<span>" + opLocation.sName + "</span>");
+    if ($('body').attr("id") != "home") {
+      var oTargetLocation = this.oGetPageOwnerById('body');
+      // The heading phrase is used in popups to adress the user, but draws on multiple
+      // possible phrases for greater variety
+      var sHeadingPhrase;
+      // Placeholder words are replaced by the necessary names
+      sHeadingPhrase = Abilities.asCounterPhrases[iRandIndex].replace("xyz", oTargetLocation.sName);
+      sHeadingPhrase = sHeadingPhrase.replace("abc", "<span>" + opLocation.sName + "</span>");
+    }
     $('#wrapper').append('<div id="' + opLocation.sId + '" class="popup"></div>');
     $('#' + opLocation.sId + '.popup').append('<h2>' + sHeadingPhrase + '</h2>');
     $('#' + opLocation.sId + '.popup').append('<h4>Head over now!</h4>');
+  },
+
+  buildMasterPopup: function(opLocation) {
+    this.buildPopup(opLocation);
+    var sHeadingPhrase = "Remember, just because you CAN go anywhere, doesn't mean you SHOULD!";
+    var sSubHeadingPhrase = "So come on over to xyz!";
+    sSubHeadingPhrase = sSubHeadingPhrase.replace("xyz", opLocation.sName);
+    $('#' + opLocation.sId + '.popup').addClass("master-popup");
+    $('#' + opLocation.sId + '.master-popup h2').text(sHeadingPhrase);
+    $('#' + opLocation.sId + '.master-popup h4').replaceWith("<h3></h3>");
+    $('#' + opLocation.sId + '.master-popup h3').wrap('<a href="' + this.sGetFlightURL(opLocation) + '"></a>');
+    $('#' + opLocation.sId + '.master-popup h3').text(sSubHeadingPhrase);
+  },
+
+  styleMasterPopup: function(opLocation) {
+    this.stylePopup(opLocation);
+    var iWidth = 800,
+        iHeight = iWidth / 4;
+    document.styleSheets[0].insertRule([""
+                                       ,'.master-popup {'
+                                       ,'width:' + iWidth + 'px !important; height: ' + iHeight + 'px !important; }'
+                                      ].join(""), this.iStyleSheetRuleIndex);
+    this.iStyleSheetRuleIndex++;
   },
 
   buildCertaintyBox: function(opLocation) {
@@ -62,8 +87,6 @@ Web = {
   },
 
   styleHomeTerritory: function(opLocation) {
-    // For more specific qualities (such as the colours of a location), inserting a rule is not dynamic enough
-    // so it is better to use the jQuery CSS modification method
     $('#' + opLocation.sId + ' h3').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId).css("color", opLocation.asGetLocationColorRoles()[1]);
     document.styleSheets[0].insertRule([""
@@ -71,6 +94,7 @@ Web = {
                                        ,'display: block; content: ""; margin: 0 auto; height: 5px; width: 0px;'
                                        ,'-webkit-transition: width 0.25s ease; transition: width 0.25s ease; }'
                                      ].join(""), this.iStyleSheetRuleIndex);
+    // Everytime a new rule is entered, the index of the rule is bumped, just to be safe
     this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
                                        ,'#home-gallery #' + opLocation.sId + ':hover h3:after {'
@@ -80,19 +104,20 @@ Web = {
   },
 
   stylePageTerritory: function(opLocation) {
-    $('#summary-box').css("border", " 15px solid " + opLocation.asGetLocationColorRoles()[1]);
-    console.log("border added");
-    $('#' + opLocation.sId + ' p').css("color", "#000");
+    $('#' + opLocation.sId + ' h1').css({"background-color": opLocation.asGetLocationColorRoles()[0],
+                                         "color": "#fff",
+                                         "width": "17%",
+                                         "display": "inline-block"
+                                        });
+    $('#summary-box p').css({"border-color": opLocation.asGetLocationColorRoles()[2],
+                              "border-width": "5px",
+                              "padding": "5%",
+                              "border-style": "solid"
+                           });
     document.styleSheets[0].insertRule([""
                                        ,'#return { '
                                        ,'width: 10%;'
-                                       ,'margin-left: auto; margin-right: auto;}'
-                                     ].join(""), this.iStyleSheetRuleIndex);
-    this.iStyleSheetRuleIndex++;
-    document.styleSheets[0].insertRule([""
-                                       ,'#' + opLocation.sId + 'h1 {'
-                                       ,'display: inline-block; width: auto;'
-                                       ,'background-color: ' + opLocation.asGetLocationColorRoles()[0] + '; }'
+                                       ,'margin-left: auto; margin-right: auto; W}'
                                      ].join(""), this.iStyleSheetRuleIndex);
     this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule([""
@@ -111,6 +136,12 @@ Web = {
                                      ].join(""), this.iStyleSheetRuleIndex);
    this.iStyleSheetRuleIndex++;
    document.styleSheets[0].insertRule([""
+                                      ,'#summary-box {'
+                                      ,'display: block; width: 50%; height: 50%; margin: 0 auto;'
+                                      ,'color: #000; }'
+                                    ].join(""), this.iStyleSheetRuleIndex);
+   this.iStyleSheetRuleIndex++;
+   document.styleSheets[0].insertRule([""
                                       ,'#link-box h4 {'
                                       ,'position: relative; width: 10%; height: 5%;'
                                       ,'margin-left: auto; margin-right: auto; }'
@@ -123,7 +154,10 @@ Web = {
         iHeight = iWidth / 4;
     $('#' + opLocation.sId + '.popup').css("background-color", opLocation.asGetLocationColorRoles()[0]);
     $('#' + opLocation.sId + '.popup').css("color", opLocation.asGetLocationColorRoles()[1]);
-    $('#' + opLocation.sId + '.popup').css("border", " 10px solid " + opLocation.asGetLocationColorRoles()[2]);
+    $('#' + opLocation.sId + '.popup').css({"border-color": opLocation.asGetLocationColorRoles()[2],
+                                            "border-width": "10px",
+                                            "border-style": "solid"
+                                          });
     document.styleSheets[0].insertRule([""
                                        ,'.popup {'
                                        ,'position: fixed; width: ' +  iWidth + 'px; height: ' + iHeight + 'px;'
@@ -132,7 +166,6 @@ Web = {
                                        ,'opacity: 0.8;'
                                        ,'-webkit-transition: opacity 0.25s ease; transition: opacity 0.25s ease; }'
                                      ].join(""), this.iStyleSheetRuleIndex);
-    // Everytime a new rule is entered, the index of the rule is bumped, just to be safe
     this.iStyleSheetRuleIndex++;
     document.styleSheets[0].insertRule('.popup:hover { opacity: 1; }', this.iStyleSheetRuleIndex);
     this.iStyleSheetRuleIndex++;
@@ -146,6 +179,8 @@ Web = {
                                        , this.iStyleSheetRuleIndex);
     this.iStyleSheetRuleIndex++;
   },
+
+
 
   styleCertaintyBox: function(opLocation) {
     var iWidth = 350,

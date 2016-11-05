@@ -12,38 +12,42 @@ Abilities = {
     });
   },
 
+  useMasterPopup: function(opLocation) {
+    Web.buildMasterPopup(opLocation);
+    Web.styleMasterPopup(opLocation);
+  },
+
   useCertaintyBox: function(opLocation) {
     Web.buildCertaintyBox(opLocation);
     Web.styleCertaintyBox(opLocation);
   },
 
-  takeTerritory: function(spTaken, spNew) {
-    var spTakenText = $('#' + spTaken + ' h3').text();
-    console.log(spTakenText);
+  takeTerritory: function(opTaken, opNew) {
+    var sTakenText = $('#' + opTaken.sId + '.home-territory h3').text();
+    var sNewText = opNew.sName;
     var iDifference, sBuffered;
-    if (spNew.length > spTakenText.length) {
-      iDifference = spNew.length - spTakenText.length;
-      sBuffered = spTakenText;
+    if (sNewText.length > sTakenText.length) {
+      iDifference = sNewText.length - sTakenText.length;
+      sBuffered = sTakenText;
       for (var i = 0; i < iDifference; i++) {
-           sBuffered.concat(" ");
+             sBuffered.concat(" ");
       }
-    } else if (spNew.length < spTakenText.length) {
-      iDifference = spTakenText.length - spTakenText.length;
-      sBuffered = spNew;
+    } else if (sNewText.length < sTakenText.length) {
+      iDifference = sTakenText.length - sNewText.length;
+      sBuffered = sNewText;
       for (var i = 0; i < iDifference; i++) {
-           sBuffered.concat(" ");
+             sBuffered.concat(" ");
       }
     }
-    var sChangingText = sBuffered || spTakenText;
-    for (var i = spNew.length; i >= 0; i--) {
+    var sChangingText = sBuffered || sTakenText;
+    for (var i = sNewText.length; i >= 0; i--) {
       var cCurrentOld = sChangingText[i],
-          cCurrentNew = spNew[i];
+          cCurrentNew = sNewText[i];
       setInterval(function() {
         sChangingText.replace(cCurrentOld, cCurrentNew);
-        $(spTaken).text(sChangingText);
+        $('#' + opTaken.sId + '.home-territory h3').text(sChangingText);
       }, 250);
     }
-    $('#' + spTaken + ' img').attr("src", "./assets/img/thumbnails/" + spTaken + ".jpg");
-    console.log("new img: " + "./assets/img/thumbnails/" + spNew + ".jpg");
+    $('#' + opTaken.sId + '.home-territory img').attr("src", "./assets/img/thumbnails/" + opNew.sId + ".jpg");
   }
 }

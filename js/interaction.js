@@ -6,19 +6,21 @@ Interaction = {
 
   addHomeListeners: function() {
     $('.home-territory').click(function() {
-      Web.switchPageTo(Web.oGetPageOwnerById(this));
+      if (Web.oLastVisitedPage && !Events.bMasterPopupExists) {
+        Events.activateMasterPopupFor(Web.oLastVisitedPage);
+      } else {
+        Web.switchPageTo(Web.oGetPageOwnerById(this));
+      }
     });
-    if (Web.oLastVisitedPage) {
-      $('.home-territory').mouseover(function() {
-        var oOwningTerritory = Web.oGetPageOwnerById(this);
-        var fRandomVal = Math.random(0, 1),
-            fThreshold = 0.6;
-        var sAttackedTerritory = oOwningTerritory.sId;
-        if (fRandomVal > fThreshold) {
-          Abilities.takeTerritory(sAttackedTerritory, Web.oLastVisitedPage.sName);
-        }
-      });
-    }
+    $('.home-territory').mouseover(function() {
+      var oOwningTerritory = Web.oGetPageOwnerById(this);
+      var fRandomVal = Math.random(0, 1),
+          fThreshold = 0.6;
+      var sAttackedTerritory = oOwningTerritory;
+      if (fRandomVal > fThreshold && Web.oLastVisitedPage) {
+        Abilities.takeTerritory(sAttackedTerritory, Web.oLastVisitedPage);
+      }
+    });
   },
 
   addPageListeners: function() {

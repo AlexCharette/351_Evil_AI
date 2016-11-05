@@ -45,6 +45,5 @@ Abilities = {
     }
     $('#' + spTaken + ' img').attr("src", "./assets/img/thumbnails/" + spTaken + ".jpg");
     console.log("new img: " + "./assets/img/thumbnails/" + spNew + ".jpg");
-    console.log("00");
   }
 }

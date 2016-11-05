@@ -1,6 +1,15 @@
 @font-face {
   font-family: 'Mist';
   src: url("../assets/fonts/Mist-Regular.ttf") format("truetype"); }
+@font-face {
+  font-family: 'Campton';
+  src: url("../assets/fonts/Campton-BoldDEMO.otf") format("opentype"); }
+@font-face {
+  font-family: 'Montserrat-SemiBold';
+  src: url("../assets/fonts/Montserrat-SemiBold.otf", format("opentype")); }
+@font-face {
+  font-family: 'Montserrat-Regular';
+  src: url("../assets/fonts/Montserrat-Regular.otf", format("opentype")); }
 #home-gallery {
   width: 90%;
   height: 60%;
@@ -25,10 +34,6 @@
 #page-content {
   width: 80%;
   height: 60%; }
-  #page-content #summary-box {
-    width: 50%;
-    height: 50%;
-    margin: 0 auto; }
 
 .row {
   width: 100%;
@@ -40,7 +45,7 @@
   height: 100%; }
 
 body {
-  font-family: "Mist", sans-serif;
+  font-family: "Montserrat-SemiBold", sans-serif;
   text-align: center; }
 
 main {
